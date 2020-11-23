@@ -37,19 +37,22 @@ public class Signup_fragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.welcome_fragment, container, false);
+        View v = inflater.inflate(R.layout.sign_up_page, container, false);
         init(v);
         signupButton.setOnClickListener(view -> {
-            //Create User
-            database.getApp().getEmailPassword().registerUserAsync(mail.getText().toString(), password.getText().toString(), it -> {
+                //Create User
                 if(password.getText().toString().equals(confirmPassword.getText().toString()))
                 {
                     if(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && !mail.getText().toString().isEmpty() && !firstname.getText().toString().isEmpty() && !lastname.getText().toString().isEmpty())
                     {
-                        if (it.isSuccess()) {
-                            Log.i("TAG","Successfully registered user.");
-                        } else {
-                            Log.e("TAG","Failed to register user: ${it.error}");
+                        String insertionMessage = database.insertUser(firstname.getText().toString(), lastname.getText().toString(), login.getText().toString(), password.getText().toString(),mail.getText().toString());
+                        if(insertionMessage.equals("User inserted"))
+                        {
+                            Toast.makeText(getActivity(),"User inserted", Toast.LENGTH_LONG).show();
+                        }
+                        else
+                        {
+                            Toast.makeText(getActivity(),insertionMessage, Toast.LENGTH_LONG).show();
                         }
                     }
                     else
@@ -61,11 +64,9 @@ public class Signup_fragment extends Fragment {
                 {
                     Toast.makeText(getActivity(),"Passwords don't match.", Toast.LENGTH_LONG).show();
                 }
-
-            });
         });
 
-        return inflater.inflate(R.layout.sign_up_page, container, false);
+        return v;
     }
 
     private void init(View v)
@@ -79,33 +80,4 @@ public class Signup_fragment extends Fragment {
         signupButton = v.findViewById(R.id.connect_btn);
     }
 
-    /*private void insertUserData()
-    {
-        Credentials credentials;
-        app.loginAsync(credentials, it -> {
-            if (it.isSuccess()) {
-                User user = app.currentUser();
-
-                MongoClient mongoClient =
-                        user.getMongoClient("My_Itinary");
-                MongoDatabase mongoDatabase =
-                        mongoClient.getDatabase("My_Itinary_DB");
-                MongoCollection<org.bson.Document> mongoCollection =
-                        mongoDatabase.getCollection("<custom user data collection>");
-
-                mongoCollection.insertOne(
-                        new Document("<user ID field>", user.getId()).append("favoriteColor", "pink"))
-                        .getAsync(result -> {
-                            if (result.isSuccess()) {
-                                Log.v("EXAMPLE", "Inserted custom user data document. _id of inserted document: "
-                                        + result.get().getId());
-                            } else {
-                                Log.e("EXAMPLE", "Unable to insert custom user data. Error: " + result.getError());
-                            }
-                        });
-            } else {
-                Log.e("EXAMPLE", "Failed to log in anonymously:" + it.getError().toString());
-            }
-        });
-    }*/
 }

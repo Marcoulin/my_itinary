@@ -20,8 +20,8 @@ public class Database
     private App app;
     private String APP_ID = "my_itinary-dcmru";
     private String response = "";
-    private String databaseName = "My_Itinary";
-    private String serviceName = "My_Itinary_DB";
+    private String databaseName = "My_Itinary_DB";
+    private String serviceName = "mongodb-atlas";
     private Database()
     {
         this.app = new App(new AppConfiguration.Builder(APP_ID).build());
@@ -41,35 +41,54 @@ public class Database
         return this.app;
     }
 
-    public void insertUser(Credentials credentials)
+    public String insertUser(String firstname, String lastname, String login, String password, String mail)
     {
-        app.loginAsync(credentials, it -> {
+        response = "";
+        database.getApp().getEmailPassword().registerUserAsync(mail, password, it -> {
             if (it.isSuccess())
             {
-                User user = app.currentUser();
+                Log.i("TAG","Successfully registered user.");
+                Credentials credentials = Credentials.emailPassword(mail, password);
+                app.loginAsync(credentials, its -> {
+                    if (its.isSuccess())
+                    {
+                        User user = app.currentUser();
 
-                MongoClient mongoClient = user.getMongoClient(serviceName);
-                MongoDatabase mongoDatabase = mongoClient.getDatabase(databaseName);
-                MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("Users");
+                        MongoClient mongoClient = user.getMongoClient(serviceName);
+                        MongoDatabase mongoDatabase = mongoClient.getDatabase(databaseName);
+                        MongoCollection<Document> mongoCollection = mongoDatabase.getCollection("Users");
 
-                mongoCollection.insertOne(new Document("<user ID field>", user.getId()).append("favoriteColor", "pink"))
-                        .getAsync(result -> {
-                            if (result.isSuccess())
-                            {
-                               // Log.v("EXAMPLE", "Inserted custom user data document. _id of inserted document: "
-                                        //+ result.get().getId());
-                            }
-                            else
-                            {
-                                Log.e("EXAMPLE", "Unable to insert custom user data. Error: " + result.getError());
-                            }
-                        });
+                        mongoCollection.insertOne(new Document("ID", user.getId())
+                                .append("Firstname", firstname)
+                                .append("Lastname", lastname)
+                                .append("Login", login))
+                                .getAsync(result -> {
+                                    if (result.isSuccess())
+                                    {
+                                        // Log.v("EXAMPLE", "Inserted custom user data document. _id of inserted document: "+ result.get().getId())
+                                        response = "User inserted";
+                                    }
+                                    else
+                                    {
+                                        Log.e("EXAMPLE", "Unable to insert custom user data. Error: " + result.getError());
+                                        response = "Unable to insert data";
+                                    }
+                                });
+                    }
+                    else
+                    {
+                        Log.e("EXAMPLE", "Failed to log in :" + its.getError().toString());
+                        response = "Failed to log in";
+                    }
+                });
             }
             else
             {
-                Log.e("EXAMPLE", "Failed to log in anonymously:" + it.getError().toString());
+                Log.e("TAG","Failed to register user: ${it.error}");
+                response = "Failed to register";
             }
         });
+        return response;
     }
 
 
