@@ -19,17 +19,16 @@ import io.realm.mongodb.User;
 
 public class MainActivity extends AppCompatActivity {
     public static FragmentManager fragmentManager;
-    String APP_ID = "my_itinary-dcmru";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         Realm.init(this);
-        App app = new App(new AppConfiguration.Builder(APP_ID).build());
+        Database database = Database.getInstance();
         fragmentManager = getSupportFragmentManager();
 
-        fragmentManager.beginTransaction().add(R.id.Main, new Welcome_Fragment(app)).commit();
+        fragmentManager.beginTransaction().add(R.id.Main, new Welcome_Fragment()).commit();
     }
 }

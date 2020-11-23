@@ -28,11 +28,10 @@ public class Welcome_Fragment extends Fragment {
     EditText editLogin, editPassword;
     private Button connectButton;
     private TextView signButton;
-    private App app;
+    Database database = Database.getInstance();
 
-    public Welcome_Fragment(App app) {
+    public Welcome_Fragment() {
         // Required empty public constructor
-        this.app = app;
     }
 
 
@@ -48,7 +47,7 @@ public class Welcome_Fragment extends Fragment {
             if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
             {
                 Credentials emailPasswordCredentials = Credentials.emailPassword(editLogin.getText().toString(), editPassword.getText().toString());
-                app.loginAsync(emailPasswordCredentials, result -> {
+                database.getApp().loginAsync(emailPasswordCredentials, result -> {
                     if(result.isSuccess())
                     {
                         //Log.v("User", "Logged success");
@@ -69,7 +68,7 @@ public class Welcome_Fragment extends Fragment {
 
         signButton.setOnClickListener(view -> {
             fragmentManager = getFragmentManager();
-            Signup_fragment s = new Signup_fragment(app);
+            Signup_fragment s = new Signup_fragment();
             fragmentManager.beginTransaction().replace(R.id.Main, s).addToBackStack(null).commit();
         });
 
