@@ -32,5 +32,4 @@ public class MainActivity extends AppCompatActivity {
 
         fragmentManager.beginTransaction().add(R.id.Main, new Welcome_Fragment(app)).commit();
     }
-
 }

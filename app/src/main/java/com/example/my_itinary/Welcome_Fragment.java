@@ -41,49 +41,36 @@ public class Welcome_Fragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.welcome_fragment, container, false);
-        editLogin = (EditText) v.findViewById(R.id.user_log);
-        editPassword = (EditText) v.findViewById(R.id.pass_log);
-        connectButton = v.findViewById(R.id.log_btn);
-        signButton = v.findViewById(R.id.sign_btn);
+        init(v);
 
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //openHomeActivity();
-                if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
-                {
-                    Credentials emailPasswordCredentials = Credentials.emailPassword(editLogin.getText().toString(), editPassword.getText().toString());
-                    app.loginAsync(emailPasswordCredentials, new App.Callback<io.realm.mongodb.User>() {
-                        @Override
-                        public void onResult(App.Result<User> result) {
-                            if(result.isSuccess())
-                            {
-                                //Log.v("User", "Logged success");
-                                openHomeActivity();
-                            }
-                            else
-                            {
-                                //Log.v("User", "Failed to log");
-                                Toast.makeText(getActivity(),"Login or Password incorrect.", Toast.LENGTH_LONG).show();
-                            }
-                        }
-                    });
-                }
-                else
-                {
-                        Toast.makeText(getActivity(),"Enter Login and Password please.", Toast.LENGTH_LONG).show();
-                }
-
+        //Connect User
+        connectButton.setOnClickListener(view -> {
+            if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
+            {
+                Credentials emailPasswordCredentials = Credentials.emailPassword(editLogin.getText().toString(), editPassword.getText().toString());
+                app.loginAsync(emailPasswordCredentials, result -> {
+                    if(result.isSuccess())
+                    {
+                        //Log.v("User", "Logged success");
+                        openHomeActivity();
+                    }
+                    else
+                    {
+                        //Log.v("User", "Failed to log");
+                        Toast.makeText(getActivity(),"Login or Password incorrect.", Toast.LENGTH_LONG).show();
+                    }
+                });
+            }
+            else
+            {
+                    Toast.makeText(getActivity(),"Enter Login and Password please.", Toast.LENGTH_LONG).show();
             }
         });
 
-        signButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                fragmentManager = getFragmentManager();
-                Signup_fragment s = new Signup_fragment();
-                fragmentManager.beginTransaction().replace(R.id.Main, s).addToBackStack(null).commit();
-            }
+        signButton.setOnClickListener(view -> {
+            fragmentManager = getFragmentManager();
+            Signup_fragment s = new Signup_fragment(app);
+            fragmentManager.beginTransaction().replace(R.id.Main, s).addToBackStack(null).commit();
         });
 
         return v;
@@ -92,6 +79,14 @@ public class Welcome_Fragment extends Fragment {
     private void openHomeActivity() {
         Intent intent = new Intent(getActivity(), Home_activity.class);
         startActivity(intent);
+    }
+
+    private void init(View v)
+    {
+        editLogin = v.findViewById(R.id.user_log);
+        editPassword = v.findViewById(R.id.pass_log);
+        connectButton = v.findViewById(R.id.log_btn);
+        signButton = v.findViewById(R.id.sign_btn);
     }
 
 }
