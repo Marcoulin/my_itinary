@@ -51,7 +51,7 @@
         android:layout_marginRight="60dp"
         android:ems="10"
         android:hint="Mot de passe"
-        android:inputType="textPersonName"
+        android:inputType="textPassword"
         android:textColor="#FFFFFF"
         android:textColorHint="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"

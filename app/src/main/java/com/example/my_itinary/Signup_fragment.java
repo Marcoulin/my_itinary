@@ -1,5 +1,6 @@
 package com.example.my_itinary;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -49,6 +50,8 @@ public class Signup_fragment extends Fragment {
                         if(insertionMessage.equals("User inserted"))
                         {
                             Toast.makeText(getActivity(),"User inserted", Toast.LENGTH_LONG).show();
+                            Intent intent = new Intent(getActivity(), Home_activity.class);
+                            startActivity(intent);
                         }
                         else
                         {
