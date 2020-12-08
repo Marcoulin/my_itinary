@@ -4,8 +4,13 @@ import android.net.wifi.hotspot2.pps.Credential;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.my_itinary.schema.Circuit;
+import com.example.my_itinary.schema.UserData;
+
 import org.bson.Document;
 
+import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.mongodb.App;
 import io.realm.mongodb.AppConfiguration;
 import io.realm.mongodb.Credentials;
@@ -91,5 +96,20 @@ public class Database
         return response;
     }
 
+    public void insertCircuit(String country, String city, String adress1, String adress2, String adress3, String picture)
+    {
+
+        Realm realm = Realm.getDefaultInstance();
+        RealmQuery<UserData> projectsQuery = realm.where(UserData.class);
+        realm.executeTransaction(r -> {
+            Circuit circuit = realm.createObject(Circuit.class);
+            circuit.setCountry(country);
+            circuit.setCity(city);
+            circuit.setAdresse1(adress1);
+            circuit.setAdresse2(adress2);
+            circuit.setAdresse3(adress3);
+            circuit.setPicture(picture);
+        });
+    }
 
 }

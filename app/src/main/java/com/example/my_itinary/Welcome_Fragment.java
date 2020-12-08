@@ -1,6 +1,8 @@
 package com.example.my_itinary;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -29,6 +31,8 @@ public class Welcome_Fragment extends Fragment {
     private Button connectButton;
     private TextView signButton;
     Database database = Database.getInstance();
+    SharedPreferences sharedPreferences;
+    public static final String UserInfo = "UserInfo";
 
     public Welcome_Fragment() {
         // Required empty public constructor
@@ -41,7 +45,7 @@ public class Welcome_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.welcome_fragment, container, false);
         init(v);
-
+        sharedPreferences = getContext().getSharedPreferences(UserInfo, Context.MODE_PRIVATE);
         //Connect User
         connectButton.setOnClickListener(view -> {
             if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
@@ -50,6 +54,9 @@ public class Welcome_Fragment extends Fragment {
                 database.getApp().loginAsync(emailPasswordCredentials, result -> {
                     if(result.isSuccess())
                     {
+                        User user = database.getApp().currentUser();
+                        SharedPreferences.Editor editor = sharedPreferences.edit();
+                        editor.putString("ID", user.getId());
                         //Log.v("User", "Logged success");
                         openHomeActivity();
                     }
