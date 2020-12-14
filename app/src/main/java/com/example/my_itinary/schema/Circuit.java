@@ -1,6 +1,4 @@
 package com.example.my_itinary.schema;
-public class Circuit {
-
 
 public class Circuit {
 
@@ -29,12 +27,6 @@ public class Circuit {
         this.picture = picture;
         this.username = username;
     }
-
-    // Standard getters & setters
-
-    private String itinaryPartitionKey;
-    private String picture;
-    private String username;
 
     public String getAdresse1() { return adresse1; }
     public void setAdresse1(String adresse1) { this.adresse1 = adresse1; }

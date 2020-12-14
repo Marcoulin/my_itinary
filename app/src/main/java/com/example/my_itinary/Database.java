@@ -1,16 +1,25 @@
 package com.example.my_itinary;
 
 
+import android.net.Uri;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
+import com.example.my_itinary.schema.Circuit;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
+import com.google.firestore.v1.StructuredQuery;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,9 +71,27 @@ public class Database
                 });
     }
 
-    public void insertCircuit(String country, String city, String adress1, String adress2, String adress3, String picture, String userId)
+    public void insertCircuit(String city, String country, String[] addressSplit, StorageReference storageRef, Uri imageData)
     {
-
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        CollectionReference circuitRef = db.collection("Circuit");
+        storageRef.putFile(imageData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        Circuit circuit = new Circuit(addressSplit[0], addressSplit[1], addressSplit[2], city, country, imageData.toString(), "Fab" );
+                        circuitRef.add(circuit);
+                    }
+                });
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                //Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        });
 
     }
 

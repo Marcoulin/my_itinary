@@ -34,7 +34,7 @@
         android:layout_marginRight="60dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="fabien.ahleung@helb-prigogine.be"
+        android:text="fal@"
         android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

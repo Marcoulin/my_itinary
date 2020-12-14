@@ -52,9 +52,6 @@ public class Post_fragment extends Fragment {
 
     private Uri imageData;
     private StorageReference storageRef;
-    private FirebaseFirestore db = FirebaseFirestore.getInstance();
-    private StorageReference fileReference;
-    private CollectionReference circuitRef = db.collection("Circuit");
 
 
 
@@ -110,7 +107,7 @@ public class Post_fragment extends Fragment {
             @Override
             public void onClick(View view) {
                 Log.v("id", ""+Preferences.read("ID", null));
-                addCircuit(v);
+                addCircuit();
             }
         });
 
@@ -191,7 +188,7 @@ public class Post_fragment extends Fragment {
 
     }
 
-    public void addCircuit(final View v)
+    public void addCircuit()
     {
 
         String postAdress = txt1.getText().toString() + ":" + txt2.getText().toString() + ":"+ txt3.getText().toString();
@@ -201,24 +198,8 @@ public class Post_fragment extends Fragment {
 
         if(!imageData.toString().isEmpty())
         {
-            fileReference = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageData));
-            fileReference.putFile(imageData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-                @Override
-                public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                    Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                        @Override
-                        public void onSuccess(Uri uri) {
-                            Circuit circuit = new Circuit(adressSplit[0], adressSplit[1], adressSplit[2], postCity, postCountry, imageData.toString(), "Fab" );
-                            circuitRef.add(circuit);
-                        }
-                    });
-                }
-            }).addOnFailureListener(new OnFailureListener() {
-                @Override
-                public void onFailure(@NonNull Exception e) {
-                    Toast.makeText(getActivity(), e.getMessage(), Toast.LENGTH_SHORT).show();
-                }
-            });
+            storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageData));
+            database.insertCircuit(postCity, postCountry, adressSplit, storageRef, imageData);
         }
     }
 
