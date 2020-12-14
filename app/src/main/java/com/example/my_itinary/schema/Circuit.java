@@ -1,28 +1,17 @@
 package com.example.my_itinary.schema;
 
-import io.realm.RealmObject;
-import io.realm.annotations.PrimaryKey;
-import io.realm.annotations.Required;
+public class Circuit {
 
-import org.bson.types.ObjectId;
-
-public class Circuit extends RealmObject {
-
-    @PrimaryKey
-    private ObjectId _id;
+    private String _id;
     private String adresse1;
     private String adresse2;
     private String adresse3;
     private String city;
     private String country;
-    @Required
     private String itinaryPartitionKey;
     private String picture;
     private String username;
 
-    // Standard getters & setters
-    public ObjectId get_id() { return _id; }
-    public void set_id(ObjectId _id) { this._id = _id; }
     public String getAdresse1() { return adresse1; }
     public void setAdresse1(String adresse1) { this.adresse1 = adresse1; }
     public String getAdresse2() { return adresse2; }
