@@ -2,6 +2,10 @@ package com.example.my_itinary.schema;
 public class Circuit {
 
 
+public class Circuit {
+
+    private String _id;
+
     private String adresse1;
     private String adresse2;
     private String adresse3;
@@ -27,6 +31,10 @@ public class Circuit {
     }
 
     // Standard getters & setters
+
+    private String itinaryPartitionKey;
+    private String picture;
+    private String username;
 
     public String getAdresse1() { return adresse1; }
     public void setAdresse1(String adresse1) { this.adresse1 = adresse1; }

@@ -1,11 +1,12 @@
 package com.example.my_itinary.schema;
 
-import android.content.Context;
-import android.content.SharedPreferences;
 
 public class UserData  {
 
 
+public class UserData {
+
+    private String _id;
     private String firstname;
     private String lastname;
     private String login;

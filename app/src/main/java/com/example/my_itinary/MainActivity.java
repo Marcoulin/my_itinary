@@ -13,7 +13,6 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        Database database = Database.getInstance();
         fragmentManager = getSupportFragmentManager();
         Preferences.init(getApplicationContext());
         fragmentManager.beginTransaction().add(R.id.Main, new Welcome_Fragment()).commit();
