@@ -10,6 +10,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.my_itinary.schema.Circuit;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+
 import java.util.ArrayList;
 
 
@@ -21,6 +27,11 @@ public class Home_fragment extends Fragment {
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
 
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private CollectionReference cirRef = db.collection("Circuit");
+
+    private CircuitAdapter adapter; 
+
     public Home_fragment() {
         // Required empty public constructor
     }
@@ -31,29 +42,31 @@ public class Home_fragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-
-        // Inflate the layout for this fragment
-        ArrayList<Item_template> exList = new ArrayList<>();
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-        exList.add(new Item_template("Line 1"));
-
-        mRecyclerView = v.findViewById(R.id.recyclerView);
-        mRecyclerView.setHasFixedSize(true);
-        mLayoutManager = new LinearLayoutManager(getContext());
-
-        mAdapter = new ExampleAdapter(exList);
-
-        mRecyclerView.setLayoutManager(mLayoutManager);
-        mRecyclerView.setAdapter(mAdapter);
+        setupRecyclerView(v);
         return v;
+    }
+
+    private void setupRecyclerView(View v) {
+        Query q = cirRef.orderBy("username");
+        FirestoreRecyclerOptions<Circuit> options = new FirestoreRecyclerOptions.Builder<Circuit>()
+                .setQuery(q, Circuit.class)
+                .build();
+
+        RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        adapter.startListening();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        adapter.stopListening();
     }
 }

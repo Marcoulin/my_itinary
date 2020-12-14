@@ -3,7 +3,6 @@ package com.example.my_itinary;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -19,7 +18,7 @@ public class ExampleAdapter extends RecyclerView.Adapter<ExampleAdapter.ExampleV
 
         public ExampleViewHolder(@NonNull View itemView) {
             super(itemView);
-            mTextView1 = itemView.findViewById(R.id.textView);
+            mTextView1 = itemView.findViewById(R.id.text_View_city);
         }
     }
 

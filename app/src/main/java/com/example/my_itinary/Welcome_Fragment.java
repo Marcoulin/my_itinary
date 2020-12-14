@@ -41,16 +41,12 @@ public class Welcome_Fragment extends Fragment {
         View v = inflater.inflate(R.layout.welcome_fragment, container, false);
         init(v);
         //Connect User
-        connectButton.setOnClickListener(view -> {
-            if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
-            {
 
-            }
-            else
-            {
-                    Toast.makeText(getActivity(),"Enter Login and Password please.", Toast.LENGTH_LONG).show();
-            }
+        connectButton.setOnClickListener(view -> {
+            openHomeActivity();
         });
+
+
 
         signButton.setOnClickListener(view -> {
             fragmentManager = getFragmentManager();
