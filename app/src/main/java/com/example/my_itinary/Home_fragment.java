@@ -1,5 +1,6 @@
 package com.example.my_itinary;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -12,7 +13,9 @@ import android.view.ViewGroup;
 
 import com.example.my_itinary.schema.Circuit;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -28,9 +31,18 @@ public class Home_fragment extends Fragment {
     private RecyclerView.LayoutManager mLayoutManager;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
+    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private CollectionReference cirRef = db.collection("Circuit");
 
-    private CircuitAdapter adapter; 
+    private CircuitAdapter adapter;
+
+    public static final String EXTRA_CITY = "com.example.my_itinary.EXTRA_CITY";
+    public static final String EXTRA_COUNTRY = "com.example.my_itinary.EXTRA_COUNTRY";
+    public static final String EXTRA_ID = "com.example.my_itinary.EXTRA_ID";
+    public static final String EXTRA_IMG = "com.example.my_itinary.IMG";
+    public static final String EXTRA_ADRESS_1 = "com.example.my_itinary.ADRESS_1";
+    public static final String EXTRA_ADRESS_2 = "com.example.my_itinary.ADRESS_2";
+    public static final String EXTRA_ADRESS_3 = "com.example.my_itinary.ADRESS_3";
 
     public Home_fragment() {
         // Required empty public constructor
@@ -43,6 +55,22 @@ public class Home_fragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
         setupRecyclerView(v);
+        adapter.setOnItemClickListener(new CircuitAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
+                Circuit circuit = documentSnapshot.toObject(Circuit.class);
+                Intent intent = new Intent(getActivity(), Description_activity.class);
+                intent.putExtra(EXTRA_CITY, circuit.getCity());
+                intent.putExtra(EXTRA_COUNTRY, circuit.getCountry());
+                intent.putExtra(EXTRA_ID, mAuth.getUid());
+                intent.putExtra(EXTRA_IMG, circuit.getPicture());
+                intent.putExtra(EXTRA_ADRESS_1, circuit.getAdresse1());
+                intent.putExtra(EXTRA_ADRESS_2, circuit.getAdresse2());
+                intent.putExtra(EXTRA_ADRESS_3, circuit.getAdresse3());
+
+                startActivity(intent);
+            }
+        });
         return v;
     }
 
