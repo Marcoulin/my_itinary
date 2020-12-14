@@ -37,6 +37,12 @@ public class Description_activity extends AppCompatActivity {
         String get_ad3 = intent.getStringExtra(Home_fragment.EXTRA_ADRESS_3);
         String get_img = intent.getStringExtra(Home_fragment.EXTRA_IMG);
 
+        String [] splitad1 = get_ad1.split(",");
+        String [] splitad2 = get_ad2.split(",");
+        String [] splitad3 = get_ad3.split(",");
+
+
+
         country = findViewById(R.id.desc_country);
         city = findViewById(R.id.desc_city);
         adress1 = findViewById(R.id.desc_adress1);
@@ -48,9 +54,9 @@ public class Description_activity extends AppCompatActivity {
 
         country.setText(get_country);
         city.setText(get_city);
-        adress1.setText(get_ad1);
-        adress2.setText(get_ad2);
-        adress3.setText(get_ad3);
+        adress1.setText(splitad1[0]);
+        adress2.setText(splitad2[0]);
+        adress3.setText(splitad3[0]);
 
     }
 }
