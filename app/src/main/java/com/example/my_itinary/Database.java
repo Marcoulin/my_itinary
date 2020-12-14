@@ -85,7 +85,7 @@ public class Database
                 Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                     @Override
                     public void onSuccess(Uri uri) {
-                        Circuit circuit = new Circuit(addressSplit[0], addressSplit[1], addressSplit[2], city, country, imageData.toString(), "Fab" );
+                        Circuit circuit = new Circuit(addressSplit[0], addressSplit[1], addressSplit[2], city, country, uri.toString(), "Fab" );
                         circuitRef.add(circuit);
                     }
                 });
