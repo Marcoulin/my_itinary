@@ -11,6 +11,11 @@ public class Circuit {
     private String picture;
     private String username;
 
+    public Circuit()
+    {
+
+    }
+
     public Circuit(String adresse1, String adresse2, String adresse3, String city, String country, String picture, String username) {
         this.adresse1 = adresse1;
         this.adresse2 = adresse2;

@@ -52,6 +52,8 @@ public class Home_fragment extends Fragment {
                 .setQuery(q, Circuit.class)
                 .build();
 
+        adapter = new CircuitAdapter(options, getContext());
+
         RecyclerView recyclerView = v.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
