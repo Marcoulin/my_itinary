@@ -59,7 +59,7 @@ public class Welcome_Fragment extends Fragment {
         //Connect User
 
         connectButton.setOnClickListener(view -> {
-            openHomeActivity();
+            //openHomeActivity();
             if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
             {
                 mAuth.signInWithEmailAndPassword(editLogin.getText().toString(), editPassword.getText().toString())

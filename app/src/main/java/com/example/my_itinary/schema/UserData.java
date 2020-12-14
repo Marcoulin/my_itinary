@@ -1,9 +1,5 @@
 package com.example.my_itinary.schema;
 
-
-public class UserData  {
-
-
 public class UserData {
 
     private String _id;

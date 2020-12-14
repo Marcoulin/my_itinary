@@ -1,6 +1,7 @@
 package com.example.my_itinary;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +11,12 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.example.my_itinary.schema.Circuit;
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.squareup.picasso.Picasso;
+
+import timber.log.Timber;
 
 public class CircuitAdapter extends FirestoreRecyclerAdapter<Circuit, CircuitAdapter.circuitHolder> {
     private Context mContext;
@@ -30,7 +33,8 @@ public class CircuitAdapter extends FirestoreRecyclerAdapter<Circuit, CircuitAda
         holder.country.setText(model.getCountry());
         holder.user.setText(model.getUsername());
 
-        Glide.with(mContext).load(model.getPicture()).into(holder.image);
+        Picasso.get().load(model.getPicture()).into(holder.image);
+        Timber.d(model.getPicture());
 
 
     }

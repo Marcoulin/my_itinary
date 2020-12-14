@@ -208,7 +208,7 @@ public class Post_fragment extends Fragment {
                     Task<Uri> urlTask = taskSnapshot.getStorage().getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
                         @Override
                         public void onSuccess(Uri uri) {
-                            Circuit circuit = new Circuit(adressSplit[0], adressSplit[1], adressSplit[2], postCity, postCountry, imageData.toString(), "Fab" );
+                            Circuit circuit = new Circuit(adressSplit[0], adressSplit[1], adressSplit[2], postCity, postCountry, uri.toString(), "Fab" );
                             circuitRef.add(circuit);
                         }
                     });
