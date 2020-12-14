@@ -13,15 +13,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import org.w3c.dom.Document;
-
-import io.realm.mongodb.App;
-import io.realm.mongodb.Credentials;
-import io.realm.mongodb.User;
-import io.realm.mongodb.mongo.MongoClient;
-import io.realm.mongodb.mongo.MongoCollection;
-import io.realm.mongodb.mongo.MongoDatabase;
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -46,17 +37,7 @@ public class Signup_fragment extends Fragment {
                 {
                     if(!login.getText().toString().isEmpty() && !password.getText().toString().isEmpty() && !mail.getText().toString().isEmpty() && !firstname.getText().toString().isEmpty() && !lastname.getText().toString().isEmpty())
                     {
-                        String insertionMessage = database.insertUser(firstname.getText().toString(), lastname.getText().toString(), login.getText().toString(), password.getText().toString(),mail.getText().toString());
-                        if(insertionMessage.equals("User inserted"))
-                        {
-                            Toast.makeText(getActivity(),"User inserted", Toast.LENGTH_LONG).show();
-                            Intent intent = new Intent(getActivity(), Home_activity.class);
-                            startActivity(intent);
-                        }
-                        else
-                        {
-                            Toast.makeText(getActivity(),insertionMessage, Toast.LENGTH_LONG).show();
-                        }
+
                     }
                     else
                     {

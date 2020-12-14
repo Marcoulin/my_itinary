@@ -17,11 +17,6 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import io.realm.mongodb.App;
-import io.realm.mongodb.Credentials;
-import io.realm.mongodb.User;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -32,7 +27,7 @@ public class Welcome_Fragment extends Fragment {
     private TextView signButton;
     Database database = Database.getInstance();
     SharedPreferences sharedPreferences;
-    public static final String UserInfo = "UserInfo";
+
 
     public Welcome_Fragment() {
         // Required empty public constructor
@@ -45,27 +40,11 @@ public class Welcome_Fragment extends Fragment {
         // Inflate the layout for this fragment
         View v = inflater.inflate(R.layout.welcome_fragment, container, false);
         init(v);
-        sharedPreferences = getContext().getSharedPreferences(UserInfo, Context.MODE_PRIVATE);
         //Connect User
         connectButton.setOnClickListener(view -> {
             if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
             {
-                Credentials emailPasswordCredentials = Credentials.emailPassword(editLogin.getText().toString(), editPassword.getText().toString());
-                database.getApp().loginAsync(emailPasswordCredentials, result -> {
-                    if(result.isSuccess())
-                    {
-                        User user = database.getApp().currentUser();
-                        SharedPreferences.Editor editor = sharedPreferences.edit();
-                        editor.putString("ID", user.getId());
-                        //Log.v("User", "Logged success");
-                        openHomeActivity();
-                    }
-                    else
-                    {
-                        //Log.v("User", "Failed to log");
-                        Toast.makeText(getActivity(),"Login or Password incorrect.", Toast.LENGTH_LONG).show();
-                    }
-                });
+
             }
             else
             {

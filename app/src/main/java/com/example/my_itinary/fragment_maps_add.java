@@ -11,18 +11,12 @@ import android.view.ViewGroup;
 import android.widget.SearchView;
 import android.widget.Toast;
 
-import com.google.android.libraries.places.api.Places;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PointOfInterest;
-import com.google.android.libraries.places.api.model.Place;
-import com.google.android.libraries.places.api.net.PlacesClient;
-
-import java.time.chrono.JapaneseEra;
 
 public class fragment_maps_add extends Fragment {
 
@@ -66,8 +60,6 @@ public class fragment_maps_add extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        Places.initialize(getContext(), String.valueOf(R.string.google_maps_key));
-        Place test;
         return inflater.inflate(R.layout.fragment_maps_add, container, false);
     }
 
