@@ -30,10 +30,7 @@ import java.util.Map;
 public class Database
 {
     private static Database database;
-    private String APP_ID = "";
-    private String response = "";
-    private String databaseName = "";
-    private String serviceName = "";
+
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private Database()
@@ -77,7 +74,6 @@ public class Database
 
     public void insertCircuit(String city, String country, String[] addressSplit, StorageReference storageRef, Uri imageData)
     {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
         CollectionReference circuitRef = db.collection("Circuit");
         storageRef.putFile(imageData).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override

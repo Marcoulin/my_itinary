@@ -9,6 +9,7 @@ public class MainActivity extends AppCompatActivity {
     public static FragmentManager fragmentManager;
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -16,5 +17,6 @@ public class MainActivity extends AppCompatActivity {
         fragmentManager = getSupportFragmentManager();
         Preferences.init(getApplicationContext());
         fragmentManager.beginTransaction().add(R.id.Main, new Welcome_Fragment()).commit();
+
     }
 }
