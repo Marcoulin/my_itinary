@@ -1,6 +1,6 @@
 package com.example.my_itinary;
 
-import android.content.Context;
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -69,6 +69,9 @@ public class Welcome_Fragment extends Fragment {
                                     // Sign in success, update UI with the signed-in user's information
                                     Log.d("TAG", "signInWithEmail:success");
                                     FirebaseUser user = mAuth.getCurrentUser();
+                                    connectButton.setVisibility(View.INVISIBLE);
+                                    signButton.setVisibility(View.INVISIBLE);
+                                    v.findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
@@ -90,7 +93,15 @@ public class Welcome_Fragment extends Fragment {
         signButton.setOnClickListener(view -> {
             fragmentManager = getFragmentManager();
             Signup_fragment s = new Signup_fragment();
-            fragmentManager.beginTransaction().replace(R.id.Main, s).addToBackStack(null).commit();
+
+            fragmentManager.beginTransaction()
+                    .setCustomAnimations(
+                            R.anim.slide_up,
+                            R.anim.slide_down,
+                            R.anim.slide_up,
+                            R.anim.slide_down
+                    )
+                   .replace(R.id.Main, s).addToBackStack(null).commit();
         });
 
         return v;
@@ -99,7 +110,8 @@ public class Welcome_Fragment extends Fragment {
     private void updateUI(FirebaseUser user) {
         Intent intent = new Intent(getActivity(), Home_activity.class);
         intent.putExtra("user", user);
-        startActivity(intent);
+        Bundle bundle =  ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_right, R.anim.slide_out_left).toBundle();
+        startActivity(intent, bundle);
     }
 
     private void init(View v)

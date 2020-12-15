@@ -7,6 +7,7 @@ import android.os.Bundle;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,6 +25,7 @@ import com.google.firebase.storage.StorageReference;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceSelectionListener;
+import com.squareup.picasso.Picasso;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
@@ -34,6 +36,9 @@ public class Post_fragment extends Fragment {
     Database database = Database.getInstance();
     Button postBtn;
     ImageView picBtn;
+    ImageView postPic;
+    FloatingActionButton picBtn;
+    String MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFobGV1bmciLCJhIjoiY2tpZjVwMzV0MTVrejJzcnNleGcwZzd1byJ9.9iL1X5kkiKOqLInFZF51zA";
     private static final int GALLERY_REQUEST_CODE = 123;
     TextView txt1, txt2, txt3;
     EditText city, country;
@@ -98,6 +103,8 @@ public class Post_fragment extends Fragment {
             public void onClick(View view) {
                 Log.v("id", ""+Preferences.read("ID", null));
                 addCircuit();
+                postBtn.setVisibility(View.VISIBLE);
+                v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
             }
         });
 
@@ -170,8 +177,12 @@ public class Post_fragment extends Fragment {
         {
             imageData = data.getData();
 
-            Toast.makeText(getActivity(),
-                    imageData.toString(), Toast.LENGTH_LONG).show();
+            YoYo.with(Techniques.FadeIn)
+                    .duration(2500)
+                    .playOn(postPic);
+            Picasso.get().load(imageData).into(postPic);
+            postPic.setVisibility(View.VISIBLE);
+
 
         }
 
@@ -191,6 +202,18 @@ public class Post_fragment extends Fragment {
             storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageData));
             database.insertCircuit(postCity, postCountry, adressSplit, storageRef, imageData);
         }
+
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        Home_fragment home_fragment = new Home_fragment();
+
+        fragmentTransaction.replace(R.id.fragment_container, home_fragment)
+                .setCustomAnimations(
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right,
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left
+                ).commit();
     }
 
     private void init(View v)
@@ -200,8 +223,9 @@ public class Post_fragment extends Fragment {
         adresse1 = v.findViewById(R.id.adress1);
         adresse2 = v.findViewById(R.id.adress2);
         adresse3 = v.findViewById(R.id.adress3);
+        postPic = v.findViewById(R.id.picPost);
+        postBtn = v.findViewById(R.id.postBtn);
         picBtn = v.findViewById(R.id.picBtn);
-        postBtn = v.findViewById(R.id.circuitBtn);
 
     }
 }

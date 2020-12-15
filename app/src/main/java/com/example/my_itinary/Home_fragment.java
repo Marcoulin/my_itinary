@@ -1,5 +1,6 @@
 package com.example.my_itinary;
 
+import android.app.ActivityOptions;
 import android.content.Intent;
 import android.os.Bundle;
 
@@ -16,6 +17,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 
@@ -26,9 +28,6 @@ import java.util.ArrayList;
  * A simple {@link Fragment} subclass.
  */
 public class Home_fragment extends Fragment {
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
-    private RecyclerView.LayoutManager mLayoutManager;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
@@ -54,28 +53,47 @@ public class Home_fragment extends Fragment {
                              Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_home, container, false);
 
-        setupRecyclerView(v);
+        setupRecyclerView(v, cirRef);
+        if (getArguments() != null) {
+            filter(getArguments(), v);
+        }
         adapter.setOnItemClickListener(new CircuitAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(DocumentSnapshot documentSnapshot, int position) {
                 Circuit circuit = documentSnapshot.toObject(Circuit.class);
-                Intent intent = new Intent(getActivity(), Description_activity.class);
-                intent.putExtra(EXTRA_CITY, circuit.getCity());
-                intent.putExtra(EXTRA_COUNTRY, circuit.getCountry());
-                intent.putExtra(EXTRA_ID, mAuth.getUid());
-                intent.putExtra(EXTRA_IMG, circuit.getPicture());
-                intent.putExtra(EXTRA_ADRESS_1, circuit.getAdresse1());
-                intent.putExtra(EXTRA_ADRESS_2, circuit.getAdresse2());
-                intent.putExtra(EXTRA_ADRESS_3, circuit.getAdresse3());
-
-                startActivity(intent);
+                toDescPage(circuit);
             }
         });
         return v;
     }
 
-    private void setupRecyclerView(View v) {
-        Query q = cirRef.orderBy("username");
+
+    private void toDescPage(Circuit circuit) {
+
+        Intent intent = new Intent(getActivity(), Description_activity.class);
+        intent.putExtra(EXTRA_CITY, circuit.getCity());
+        intent.putExtra(EXTRA_COUNTRY, circuit.getCountry());
+        intent.putExtra(EXTRA_ID, mAuth.getUid());
+        intent.putExtra(EXTRA_IMG, circuit.getPicture());
+        intent.putExtra(EXTRA_ADRESS_1, circuit.getAdresse1());
+        intent.putExtra(EXTRA_ADRESS_2, circuit.getAdresse2());
+        intent.putExtra(EXTRA_ADRESS_3, circuit.getAdresse3());
+
+        Bundle bundle = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_right, R.anim.slide_out_left).toBundle();
+        startActivity(intent, bundle);
+
+
+    }
+
+    private void filter(Bundle arguments, View v) {
+        FirestoreRecyclerOptions<Circuit> options;
+        Query query;
+        ArrayList<String> list = arguments.getStringArrayList("Id");
+        query = cirRef.whereIn(FieldPath.documentId(), list);
+        setupRecyclerView(v, query);
+    }
+
+    private void setupRecyclerView(View v, Query q) {
         FirestoreRecyclerOptions<Circuit> options = new FirestoreRecyclerOptions.Builder<Circuit>()
                 .setQuery(q, Circuit.class)
                 .build();
