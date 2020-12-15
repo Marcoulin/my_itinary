@@ -15,4 +15,8 @@ public class UserData {
     public void setLastname(String lastname) { this.lastname = lastname; }
     public String getLogin() { return login; }
     public void setLogin(String login) { this.login = login; }
+
+    public String get_id() {
+        return _id;
+    }
 }

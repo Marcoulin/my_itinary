@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -35,7 +36,14 @@ public class Welcome_Fragment extends Fragment {
     Database database = Database.getInstance();
     SharedPreferences sharedPreferences;
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
+    public static String userName;
 
+
+
+
+    public static void setUserName(String userName) {
+        Welcome_Fragment.userName = userName;
+    }
 
     public Welcome_Fragment() {
         // Required empty public constructor
@@ -59,8 +67,7 @@ public class Welcome_Fragment extends Fragment {
         //Connect User
 
         connectButton.setOnClickListener(view -> {
-            if(!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty())
-            {
+            if (!editLogin.getText().toString().isEmpty() && !editPassword.getText().toString().isEmpty()) {
                 mAuth.signInWithEmailAndPassword(editLogin.getText().toString(), editPassword.getText().toString())
                         .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                             @Override
@@ -72,22 +79,20 @@ public class Welcome_Fragment extends Fragment {
                                     connectButton.setVisibility(View.INVISIBLE);
                                     signButton.setVisibility(View.INVISIBLE);
                                     v.findViewById(R.id.progressBar2).setVisibility(View.VISIBLE);
+                                    userName = Database.getInstance().getUsername(mAuth.getUid());
                                     updateUI(user);
                                 } else {
                                     // If sign in fails, display a message to the user.
                                     Log.w("TAG", "signInWithEmail:failure =>", task.getException());
-                                    Toast.makeText(getActivity(), ""+task.getException().getMessage(),
+                                    Toast.makeText(getActivity(), "" + task.getException().getMessage(),
                                             Toast.LENGTH_SHORT).show();
                                 }
                             }
                         });
-            }
-            else
-            {
-                    Toast.makeText(getActivity(),"Enter Login and Password please.", Toast.LENGTH_LONG).show();
+            } else {
+                Toast.makeText(getActivity(), "Enter Login and Password please.", Toast.LENGTH_LONG).show();
             }
         });
-
 
 
         signButton.setOnClickListener(view -> {
@@ -101,7 +106,7 @@ public class Welcome_Fragment extends Fragment {
                             R.anim.slide_up,
                             R.anim.slide_down
                     )
-                   .replace(R.id.Main, s).addToBackStack(null).commit();
+                    .replace(R.id.Main, s).addToBackStack(null).commit();
         });
 
         return v;
@@ -110,16 +115,16 @@ public class Welcome_Fragment extends Fragment {
     private void updateUI(FirebaseUser user) {
         Intent intent = new Intent(getActivity(), Home_activity.class);
         intent.putExtra("user", user);
-        Bundle bundle =  ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_right, R.anim.slide_out_left).toBundle();
+        Bundle bundle = ActivityOptions.makeCustomAnimation(getActivity(), R.anim.slide_in_right, R.anim.slide_out_left).toBundle();
         startActivity(intent, bundle);
     }
 
-    private void init(View v)
-    {
+    private void init(View v) {
         editLogin = v.findViewById(R.id.user_log);
         editPassword = v.findViewById(R.id.pass_log);
         connectButton = v.findViewById(R.id.log_btn);
         signButton = v.findViewById(R.id.sign_btn);
     }
+
 
 }

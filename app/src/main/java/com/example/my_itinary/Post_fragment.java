@@ -12,6 +12,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
+
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +44,7 @@ import com.squareup.picasso.Picasso;
 
 import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
+
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -58,7 +61,7 @@ public class Post_fragment extends Fragment {
 
     private Uri imageData;
     private StorageReference storageRef;
-
+    StorageReference fileReference;
 
 
     public Post_fragment() {
@@ -72,6 +75,7 @@ public class Post_fragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_post, container, false);
 
         storageRef = FirebaseStorage.getInstance().getReference("uploads");
+
 
         init(v);
 
@@ -112,7 +116,7 @@ public class Post_fragment extends Fragment {
         postBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.v("id", ""+Preferences.read("ID", null));
+                Log.v("id", "" + Preferences.read("ID", null));
                 addCircuit();
                 postBtn.setVisibility(View.VISIBLE);
                 v.findViewById(R.id.progressBar).setVisibility(View.VISIBLE);
@@ -121,7 +125,6 @@ public class Post_fragment extends Fragment {
 
         return v;
     }
-
 
 
     private void setAdress(TextView txt, Bundle savedInstanceState) {
@@ -143,7 +146,7 @@ public class Post_fragment extends Fragment {
         autocompleteFragment.setOnPlaceSelectedListener(new PlaceSelectionListener() {
             @Override
             public void onPlaceSelected(CarmenFeature carmenFeature) {
-                Log.v("placename",""+carmenFeature.placeName());
+                Log.v("placename", "" + carmenFeature.placeName());
                 txt.setText(carmenFeature.placeName());
                 txt.setVisibility(View.VISIBLE);
                 getActivity().onBackPressed();
@@ -158,23 +161,21 @@ public class Post_fragment extends Fragment {
     }
 
 
-
-    private String getFileExtension(Uri uri)
-    {
+    private String getFileExtension(Uri uri) {
         ContentResolver cR = getActivity().getContentResolver();
         MimeTypeMap mime = MimeTypeMap.getSingleton();
         return mime.getExtensionFromMimeType(cR.getType(uri));
     }
 
     private void getImageFromAlbum() {
-        try{
+        try {
             Intent i = new Intent();
             i.setType("image/*");
             i.setAction(i.ACTION_GET_CONTENT);
             startActivityForResult(i.createChooser(i, "Pick an image"), GALLERY_REQUEST_CODE);
 
-        }catch(Exception exp){
-            Log.i("Error",exp.toString());
+        } catch (Exception exp) {
+            Log.i("Error", exp.toString());
         }
 
 
@@ -184,8 +185,7 @@ public class Post_fragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null)
-        {
+        if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
             imageData = data.getData();
 
             YoYo.with(Techniques.FadeIn)
@@ -197,22 +197,25 @@ public class Post_fragment extends Fragment {
 
         }
 
+    }
+
+    private void uploadFile() {
+        if (imageData != null) {
+            fileReference = storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageData));
+        }
 
     }
 
-    public void addCircuit()
-    {
+    public void addCircuit() {
 
-        String postAdress = txt1.getText().toString() + ":" + txt2.getText().toString() + ":"+ txt3.getText().toString();
+        String postAdress = txt1.getText().toString() + ":" + txt2.getText().toString() + ":" + txt3.getText().toString();
         String postCity = city.getText().toString();
         String postCountry = country.getText().toString();
-        String [] adressSplit = postAdress.split(":");
+        String[] adressSplit = postAdress.split(":");
 
-        if(!imageData.toString().isEmpty())
-        {
-            storageRef.child(System.currentTimeMillis() + "." + getFileExtension(imageData));
-            database.insertCircuit(postCity, postCountry, adressSplit, storageRef, imageData);
-        }
+        uploadFile();
+        database.insertCircuit(postCity, postCountry, adressSplit, fileReference, imageData);
+
 
         FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
         FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
@@ -227,8 +230,7 @@ public class Post_fragment extends Fragment {
                 ).commit();
     }
 
-    private void init(View v)
-    {
+    private void init(View v) {
         city = v.findViewById(R.id.cityTxt);
         country = v.findViewById(R.id.countryTxt);
         adresse1 = v.findViewById(R.id.adress1);
