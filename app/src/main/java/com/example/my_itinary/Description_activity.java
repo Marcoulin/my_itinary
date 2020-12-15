@@ -13,12 +13,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.mapbox.api.directions.v5.DirectionsCriteria;
-import com.mapbox.api.directions.v5.MapboxDirections;
-import com.mapbox.api.directions.v5.models.DirectionsResponse;
-import com.mapbox.api.directions.v5.models.DirectionsRoute;
-import com.mapbox.api.geocoding.v5.GeocodingCriteria;
 import com.mapbox.api.geocoding.v5.MapboxGeocoding;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
@@ -37,12 +34,8 @@ public class Description_activity extends AppCompatActivity {
     private TextView user; 
     private TextView adress1, adress2, adress3;
     private ImageView picImage;
-    private FloatingActionButton floatButton1, floatButton2,floatButton3;
     private String MAPBOX = "pk.eyJ1IjoiZmFobGV1bmciLCJhIjoiY2tpZjVwMzV0MTVrejJzcnNleGcwZzd1byJ9.9iL1X5kkiKOqLInFZF51zA";
     private Point point1, point2, point3;
-    private Button circuitButton;
-    private TextView country, city, adress1, adress2, adress3;
-    private ImageView picImage;
     private FloatingActionButton f1, f2, f3;
     private ImageView i1, i2, i3;
     private Button postBtn;
@@ -50,31 +43,27 @@ public class Description_activity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_description);
-        
-        final Intent intent = getIntent();
-
-
         init();
 
         final Intent intent = getIntent();
 
         setDescription(intent);
         super.onCreate(savedInstanceState);
-        floatButton1.setOnClickListener(view -> {
+        f1.setOnClickListener(view -> {
             showLocation(adress1.getText().toString());
 
         });
-        floatButton2.setOnClickListener(view -> {
+        f2.setOnClickListener(view -> {
             showLocation(adress2.getText().toString());
            /* Fragment gmap = new fragment_maps_add(adress2.getText().toString());
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, gmap).commit();*/
         });
-        floatButton3.setOnClickListener(view -> {
+        f3.setOnClickListener(view -> {
             showLocation(adress3.getText().toString());
            /* Fragment gmap = new fragment_maps_add(adress3.getText().toString());
             getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, gmap).commit();*/
         });
-        circuitButton.setOnClickListener(view -> {
+        postBtn.setOnClickListener(view -> {
             drawCircuit();
         });
     }
@@ -200,7 +189,7 @@ public class Description_activity extends AppCompatActivity {
         i1 = findViewById(R.id.locIcon1);
         i2 = findViewById(R.id.locIcon2);
         i3 = findViewById(R.id.locIcon3);
-        postBtn = findViewById(R.id.postBtn);
+        postBtn = findViewById(R.id.circuitBtn);
 
         makeAnimations();
 
@@ -238,29 +227,12 @@ public class Description_activity extends AppCompatActivity {
         String[] splitad2 = get_ad2.split(",");
         String[] splitad3 = get_ad3.split(",");
 
-
-
-        country = findViewById(R.id.desc_country);
-        city = findViewById(R.id.desc_city);
-        adress1 = findViewById(R.id.desc_adress1);
-        adress2 = findViewById(R.id.desc_adress2);
-        adress3 = findViewById(R.id.desc_adress3);
-        picImage = findViewById(R.id.des_image);
-        floatButton1 = findViewById(R.id.floatingActionButton1);
-        floatButton2 = findViewById(R.id.floatingActionButton2);
-        floatButton3 = findViewById(R.id.floatingActionButton3);
-        circuitButton = findViewById(R.id.circuitBtn);
-
         Picasso.get().load(get_img).into(picImage);
-
         country.setText(get_country);
         city.setText(get_city);
         adress1.setText(splitad1[0]);
         adress2.setText(splitad2[0]);
         adress3.setText(splitad3[0]);
-
-
-
     }
 
     @Override

@@ -20,6 +20,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
@@ -35,10 +38,8 @@ import static android.content.ContentValues.TAG;
 public class Post_fragment extends Fragment {
     Database database = Database.getInstance();
     Button postBtn;
-    ImageView picBtn;
     ImageView postPic;
     FloatingActionButton picBtn;
-    String MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFobGV1bmciLCJhIjoiY2tpZjVwMzV0MTVrejJzcnNleGcwZzd1byJ9.9iL1X5kkiKOqLInFZF51zA";
     private static final int GALLERY_REQUEST_CODE = 123;
     TextView txt1, txt2, txt3;
     EditText city, country;
@@ -224,7 +225,7 @@ public class Post_fragment extends Fragment {
         adresse2 = v.findViewById(R.id.adress2);
         adresse3 = v.findViewById(R.id.adress3);
         postPic = v.findViewById(R.id.picPost);
-        postBtn = v.findViewById(R.id.postBtn);
+        postBtn = v.findViewById(R.id.circuitBtn);
         picBtn = v.findViewById(R.id.picBtn);
 
     }
