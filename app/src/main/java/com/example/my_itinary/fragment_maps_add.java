@@ -17,16 +17,27 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.mapbox.geojson.Point;
 
 public class fragment_maps_add extends Fragment {
 
-    SearchView searchView;
-    String city, country;
-    public fragment_maps_add(String city, String country)
+    Point point1, point2, point3;
+
+    public  fragment_maps_add(Point point1)
     {
-        this.city = city;
-        this.country = country;
+        this.point1 = point1;
     }
+
+    public fragment_maps_add(Point point1, Point point2, Point point3)
+    {
+        this.point1 = point1;
+        this.point2 = point2;
+        this.point3 = point3;
+    }
+
+
 
     private OnMapReadyCallback callback = new OnMapReadyCallback() {
 
@@ -41,9 +52,18 @@ public class fragment_maps_add extends Fragment {
          */
         @Override
         public void onMapReady(GoogleMap googleMap) {
-            LatLng sydney = new LatLng(-34, 151);
-            googleMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
-            googleMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+            LatLng location = new LatLng(point1.latitude(),point1.longitude());
+            if(point1 != null && point2 != null && point3 != null)
+            {
+
+                PolylineOptions polylineOptions = new PolylineOptions()
+                        .add(new LatLng(point1.latitude(), point1.longitude()))
+                        .add(new LatLng(point2.latitude(), point2.longitude()))
+                        .add(new LatLng(point3.latitude(), point3.longitude()));
+                Polyline polyline = googleMap.addPolyline(polylineOptions);
+            }
+            googleMap.addMarker(new MarkerOptions().position(location).title("Marker"));
+            googleMap.moveCamera(CameraUpdateFactory.newLatLng(location));
             googleMap.setOnPoiClickListener(pointOfInterest -> {
                 Toast.makeText(getContext(), "Clicked: " +
                                 pointOfInterest.name + "\nPlace ID:" + pointOfInterest.placeId +

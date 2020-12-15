@@ -213,7 +213,7 @@
         app:layout_constraintTop_toBottomOf="@+id/adress3" />
 
     <Button
-        android:id="@+id/postBtn"
+        android:id="@+id/circuitBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"

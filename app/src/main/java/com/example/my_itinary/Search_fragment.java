@@ -98,8 +98,10 @@ public class Search_fragment extends Fragment {
                             country = adapterView.getSelectedItem().toString();
                             Database.getInstance().getCities(new OnCompleteListener<QuerySnapshot>() {
                                 @Override
-                                public void onComplete(@NonNull Task<QuerySnapshot> task) {
-                                    if (task.isSuccessful()) {
+                                public void onComplete(@NonNull Task<QuerySnapshot> task)
+                                {
+                                    if(task.isSuccessful())
+                                    {
                                         cities.clear();
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             if (!cities.contains(document.toObject(Circuit.class).getCity())) {
