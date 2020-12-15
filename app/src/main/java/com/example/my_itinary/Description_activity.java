@@ -1,33 +1,179 @@
 package com.example.my_itinary;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.Fragment;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.mapbox.api.directions.v5.DirectionsCriteria;
+import com.mapbox.api.directions.v5.MapboxDirections;
+import com.mapbox.api.directions.v5.models.DirectionsResponse;
+import com.mapbox.api.directions.v5.models.DirectionsRoute;
+import com.mapbox.api.geocoding.v5.GeocodingCriteria;
+import com.mapbox.api.geocoding.v5.MapboxGeocoding;
+import com.mapbox.api.geocoding.v5.models.CarmenFeature;
+import com.mapbox.api.geocoding.v5.models.GeocodingResponse;
+import com.mapbox.geojson.Point;
 import com.squareup.picasso.Picasso;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class Description_activity extends AppCompatActivity {
     private TextView country; 
     private TextView city; 
     private TextView user; 
-    private TextView adress1; 
-    private TextView adress2; 
-    private TextView adress3; 
+    private TextView adress1, adress2, adress3;
     private ImageView picImage;
-
+    private FloatingActionButton floatButton1, floatButton2,floatButton3;
+    private String MAPBOX = "pk.eyJ1IjoiZmFobGV1bmciLCJhIjoiY2tpZjVwMzV0MTVrejJzcnNleGcwZzd1byJ9.9iL1X5kkiKOqLInFZF51zA";
+    private Point point1, point2, point3;
+    private Button circuitButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_description);
         
-        final Intent intent = getIntent(); 
-        
-        setDescription(intent); 
+        final Intent intent = getIntent();
+        setDescription(intent);
         super.onCreate(savedInstanceState);
+        floatButton1.setOnClickListener(view -> {
+            showLocation(adress1.getText().toString());
+
+        });
+        floatButton2.setOnClickListener(view -> {
+            showLocation(adress2.getText().toString());
+           /* Fragment gmap = new fragment_maps_add(adress2.getText().toString());
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, gmap).commit();*/
+        });
+        floatButton3.setOnClickListener(view -> {
+            showLocation(adress3.getText().toString());
+           /* Fragment gmap = new fragment_maps_add(adress3.getText().toString());
+            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, gmap).commit();*/
+        });
+        circuitButton.setOnClickListener(view -> {
+            drawCircuit();
+        });
     }
+
+    private void showLocation(String address)
+    {
+        MapboxGeocoding mapboxGeocoding = MapboxGeocoding.builder()
+                .accessToken(MAPBOX)
+                .query(address)
+                .build();
+
+        mapboxGeocoding.enqueueCall(new Callback<GeocodingResponse>() {
+            @Override
+            public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+
+                List<CarmenFeature> results = response.body().features();
+
+                if (results.size() > 0) {
+
+                    // Log the first results Point.
+                    Point firstResultPoint = results.get(0).center();
+                    Log.v("TAG", "onResponse: " + firstResultPoint.toString());
+                    Fragment gmap = new fragment_maps_add(firstResultPoint);
+                    getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, gmap).commit();
+
+                } else {
+
+                    // No result for your request were found.
+                    Log.d("TAG", "onResponse: No result found");
+                    Toast.makeText(getApplicationContext(), "Location error", Toast.LENGTH_SHORT).show();
+
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GeocodingResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+    }
+
+    private void drawCircuit()
+    {
+        MapboxGeocoding client = MapboxGeocoding.builder()
+                .accessToken(MAPBOX)
+                .query(adress1.getText().toString())
+                .build();
+
+        client.enqueueCall(new Callback<GeocodingResponse>() {
+            @Override
+            public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+
+                List<CarmenFeature> results1 = response.body().features();
+
+                if (results1.size() > 0) {
+                    point1 = results1.get(0).center();
+                    MapboxGeocoding client2 = MapboxGeocoding.builder().accessToken(MAPBOX).query(adress2.getText().toString()).build();
+                    client2.enqueueCall(new Callback<GeocodingResponse>() {
+                        @Override
+                        public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                            List<CarmenFeature> results2 = response.body().features();
+                            if(results2.size() > 0)
+                            {
+                                point2 = results2.get(0).center();
+                                MapboxGeocoding client3 = MapboxGeocoding.builder().accessToken(MAPBOX).query(adress3.getText().toString()).build();
+                                client3.enqueueCall(new Callback<GeocodingResponse>() {
+                                    @Override
+                                    public void onResponse(Call<GeocodingResponse> call, Response<GeocodingResponse> response) {
+                                        List<CarmenFeature> results3 = response.body().features();
+                                        if(results3.size() > 0)
+                                        {
+                                            point3 = results3.get(0).center();
+                                            Fragment gmap = new fragment_maps_add(point1,point2,point3);
+                                            getSupportFragmentManager().beginTransaction().replace(R.id.frameLayout, gmap).commit();
+                                        }
+                                        else
+                                        {
+                                            Toast.makeText(getApplicationContext(), "Location error", Toast.LENGTH_SHORT).show();
+                                        }
+                                    }
+
+                                    @Override
+                                    public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                Toast.makeText(getApplicationContext(), "Location error", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<GeocodingResponse> call, Throwable t) {
+
+                        }
+                    });
+                } else {
+                    Toast.makeText(getApplicationContext(), "Location error", Toast.LENGTH_SHORT).show();
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GeocodingResponse> call, Throwable throwable) {
+                throwable.printStackTrace();
+            }
+        });
+    }
+
 
     private void setDescription(Intent intent) {
         String get_city = intent.getStringExtra(Home_fragment.EXTRA_CITY);
@@ -49,6 +195,10 @@ public class Description_activity extends AppCompatActivity {
         adress2 = findViewById(R.id.desc_adress2);
         adress3 = findViewById(R.id.desc_adress3);
         picImage = findViewById(R.id.des_image);
+        floatButton1 = findViewById(R.id.floatingActionButton1);
+        floatButton2 = findViewById(R.id.floatingActionButton2);
+        floatButton3 = findViewById(R.id.floatingActionButton3);
+        circuitButton = findViewById(R.id.circuitBtn);
 
         Picasso.get().load(get_img).into(picImage);
 
@@ -57,6 +207,8 @@ public class Description_activity extends AppCompatActivity {
         adress1.setText(splitad1[0]);
         adress2.setText(splitad2[0]);
         adress3.setText(splitad3[0]);
+
+
 
     }
 }

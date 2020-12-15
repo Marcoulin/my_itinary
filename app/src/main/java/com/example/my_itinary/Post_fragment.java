@@ -1,13 +1,10 @@
 package com.example.my_itinary;
 
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -22,15 +19,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.my_itinary.schema.Circuit;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 import com.mapbox.api.geocoding.v5.models.CarmenFeature;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceAutocompleteFragment;
 import com.mapbox.mapboxsdk.plugins.places.autocomplete.ui.PlaceSelectionListener;
@@ -44,11 +34,11 @@ public class Post_fragment extends Fragment {
     Database database = Database.getInstance();
     Button postBtn;
     ImageView picBtn;
-    String MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoiZmFobGV1bmciLCJhIjoiY2tpZjVwMzV0MTVrejJzcnNleGcwZzd1byJ9.9iL1X5kkiKOqLInFZF51zA";
     private static final int GALLERY_REQUEST_CODE = 123;
     TextView txt1, txt2, txt3;
     EditText city, country;
     Button adresse1, adresse2, adresse3;
+    private final String MAPBOX = "pk.eyJ1IjoiZmFobGV1bmciLCJhIjoiY2tpZjVwMzV0MTVrejJzcnNleGcwZzd1byJ9.9iL1X5kkiKOqLInFZF51zA";
 
     private Uri imageData;
     private StorageReference storageRef;
@@ -120,7 +110,7 @@ public class Post_fragment extends Fragment {
 
         PlaceAutocompleteFragment autocompleteFragment;
         if (savedInstanceState == null) {
-            autocompleteFragment = PlaceAutocompleteFragment.newInstance(MAPBOX_ACCESS_TOKEN);
+            autocompleteFragment = PlaceAutocompleteFragment.newInstance(MAPBOX);
 
             FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
             transaction.add(R.id.fragment_container, autocompleteFragment, TAG);
@@ -211,7 +201,7 @@ public class Post_fragment extends Fragment {
         adresse2 = v.findViewById(R.id.adress2);
         adresse3 = v.findViewById(R.id.adress3);
         picBtn = v.findViewById(R.id.picBtn);
-        postBtn = v.findViewById(R.id.postBtn);
+        postBtn = v.findViewById(R.id.circuitBtn);
 
     }
 }

@@ -83,6 +83,7 @@ public class Search_fragment extends Fragment{
                                 {
                                     if(task.isSuccessful())
                                     {
+                                        cities.clear();
                                         for (QueryDocumentSnapshot document : task.getResult()) {
                                             if(!cities.contains(document.toObject(Circuit.class).getCity()))
                                             {
